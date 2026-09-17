@@ -26,7 +26,7 @@ def jsn_loader(csv_path: list, json_path: str) -> list[dict]:
                 dict_like[key] = []
                 dict_like[key].append(value)
         loaded_dicts.append(dict_like)
-    if not json_path == "skip":
+    if not json_path == "":
         with open(json_path, "w", encoding='utf-8') as js_file:
             json.dump(dict_like, js_file, ensure_ascii=False, indent=5)
     print("All processes done properly")

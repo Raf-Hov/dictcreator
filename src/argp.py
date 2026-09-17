@@ -13,8 +13,8 @@ def get_def_csv() -> list:
 
 
 def data_josn_pathfinder(name: str) -> str:
-    if name == "skip":
-        return "skip"
+    if name == "":
+        return ""
     data_json_dir = Path(__file__).resolve().parent.parent / "data_json"
     data_json_dir.mkdir(parents=True, exist_ok=True)
     full_file_path = data_json_dir / name
