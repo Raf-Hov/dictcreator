@@ -12,6 +12,7 @@ def randomizer(word_list: list[dict[str, list]], num: int, n: int) -> None:
     available_words = [w for w in all_words if w not in selected_words]
     print("Type 'skip' instead of an answer to skip a word.")
     while selected_words:
+        print(f"Words left : {len(selected_words)}")
         current_item = selected_words.pop(0)
         word, translations = current_item
         arm_words = ", ".join(translations)
