@@ -1,24 +1,26 @@
 import random
-from .erros import Less_num
+from collections import deque
 
 
-def randomizer(word_list: list[dict[str, list]], num: int, n: int) -> None:
-    all_words = []
-    for word, translations in word_list[n].items():
-        all_words.append((word, translations))
+def randomizer(word_dicts: dict[str, dict[str, list]], num: int, dict_name: str) -> None:
+    if dict_name not in word_dicts:
+        raise KeyError(
+            f"Dictionary '{dict_name}' not found. Available options: {list(word_dicts.keys())}")
+    all_words = list(word_dicts[dict_name].items())
     if len(all_words) < num:
-        raise Less_num(f"in dictionary only {len(all_words)}")
-    selected_words = random.sample(all_words, num)
-    available_words = [w for w in all_words if w not in selected_words]
+        raise ValueError(
+            f"In '{dict_name}' dictionary only {len(all_words)} words available.")
+    selected_list = random.sample(all_words, num)
+    selected_words = deque(selected_list)
+    available_words = [w for w in all_words if w not in selected_list]
+    print(f"--- Starting quiz using the '{dict_name}' dictionary ---")
     print("Type 'skip' instead of an answer to skip a word.")
     while selected_words:
         print(f"Words left : {len(selected_words)}")
-        current_item = selected_words.pop(0)
+        current_item = selected_words.popleft()
         word, translations = current_item
         arm_words = ", ".join(translations)
-        answer = input(
-            f"Translate the word \033[31m'{arm_words}':\033[0m "
-            ).strip().lower()
+        answer = input(f"Translate the word \033[31m'{arm_words}':\033[0m ").strip().lower()
         if answer == "skip":
             print(f"Skipped word: {word}")
             if available_words:
