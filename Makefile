@@ -1,1 +1,5 @@
-all: python3 -m src
+PYTHON = python3
+MAIN = src
+
+run:
+	$(PYTHON) -m $(MAIN)
