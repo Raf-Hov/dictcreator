@@ -2,8 +2,8 @@ from pathlib import Path
 from .erros import Csv_not_found
 
 
-def get_def_csv() -> list:
-    data_dir = Path(__file__).resolve().parent.parent / "data"
+def get_def_csv(folder_name: str = "data") -> list:
+    data_dir = Path(__file__).resolve().parent.parent / folder_name
     if not data_dir.exists():
         raise FileNotFoundError
     csv_file = list(data_dir.glob("*.csv"))

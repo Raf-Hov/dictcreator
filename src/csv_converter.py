@@ -37,7 +37,7 @@ def jsn_loader(csv_paths: list, json_path: str) -> dict[str, dict]:
                         dict_like[key].extend(values)
                     elif values:
                         dict_like[key] = values
-        file_name = path.stem 
+        file_name = path.stem
         loaded_dicts[file_name] = dict_like
     if json_path != "":
         with open(json_path, "w", encoding='utf-8') as js_file:

@@ -6,10 +6,12 @@ from .argp import get_def_csv, data_josn_pathfinder
 
 
 def main():
+    lang = input("Choose language (eng / fr): ").strip().lower()
+    folder = "data_for_fr" if lang == "fr" else "data"
     filename = input("Write file name for json or press enter for skipping: ").strip()
     if filename and not filename.endswith(".json"):
         filename += ".json"
-    jsn = jsn_loader(get_def_csv(), data_josn_pathfinder(filename))
+    jsn = jsn_loader(get_def_csv(folder), data_josn_pathfinder(filename))
     mix_all = {}
     for d in jsn.values():
         mix_all.update(d)
@@ -26,7 +28,7 @@ def main():
     choices = choice_input.split()
     if not choices:
         print("Error: No input provided!")
-        return 
+        return
     chosen_name = "custom_mix"
     custom_dict = {}
     try:
