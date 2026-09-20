@@ -33,7 +33,6 @@ def jsn_loader(csv_paths: list, json_path: str) -> dict[str, dict]:
                 if len(row) >= 2:
                     key = row[0].strip()
                     values = [v.strip() for v in row[1:] if v.strip()]
-                    
                     if key in dict_like:
                         dict_like[key].extend(values)
                     elif values:
