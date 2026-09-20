@@ -31,10 +31,14 @@ def jsn_loader(csv_paths: list, json_path: str) -> dict[str, dict]:
             csv_reader = csv.reader(file)
             for row in csv_reader:
                 if len(row) >= 2:
-                    key = row[0]
-                    value = row[1]
-                    dict_like[key] = [value]
-        file_name = path.stem
+                    key = row[0].strip()
+                    values = [v.strip() for v in row[1:] if v.strip()]
+                    
+                    if key in dict_like:
+                        dict_like[key].extend(values)
+                    elif values:
+                        dict_like[key] = values
+        file_name = path.stem 
         loaded_dicts[file_name] = dict_like
     if json_path != "":
         with open(json_path, "w", encoding='utf-8') as js_file:
