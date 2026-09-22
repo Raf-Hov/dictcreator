@@ -2,14 +2,14 @@ from pathlib import Path
 from .erros import Csv_not_found
 
 
-def get_def_csv(folder_name: str = "data") -> list:
+def get_data_files(folder_name: str = "data") -> list:
     data_dir = Path(__file__).resolve().parent.parent / folder_name
     if not data_dir.exists():
-        raise FileNotFoundError
-    csv_file = list(data_dir.glob("*.csv"))
-    if not csv_file:
-        raise Csv_not_found("csv files not found")
-    return csv_file
+        raise FileNotFoundError(f"Folder {folder_name} not found")
+    files = list(data_dir.glob("*.csv")) + list(data_dir.glob("*.json"))
+    if not files:
+        raise Csv_not_found("CSV or JSON files not found")
+    return files
 
 
 def data_josn_pathfinder(name: str) -> str:
