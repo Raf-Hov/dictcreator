@@ -44,9 +44,11 @@ def main():
         return
     jsn[chosen_name] = custom_dict
     num = input("Write number of words: ").strip()
+    order_choice = input("Randomize words? (y/n): ").strip().lower()
+    is_random = order_choice != 'n'
     sys.stdout.flush()
     try:
-        randomizer(jsn, int(num), chosen_name)
+        randomizer(jsn, int(num), chosen_name, is_random)
     except src.erros.Less_num:
         print("Your chosen number is greater than the length of the csv file.")
     except ValueError as e:
@@ -55,3 +57,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    

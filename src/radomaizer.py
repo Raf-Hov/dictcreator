@@ -2,17 +2,19 @@ import random
 from collections import deque
 
 
-def randomizer(word_dicts: dict[str, dict[str, list]], num: int, dict_name: str) -> None:
+def randomizer(word_dicts: dict[str, dict[str, list]], num: int, dict_name: str, is_random: bool = True) -> None:
     if dict_name not in word_dicts:
-        raise KeyError(
-            f"Dictionary '{dict_name}' not found. Available options: {list(word_dicts.keys())}")
+        raise KeyError(f"Dictionary '{dict_name}' not found. Available options: {list(word_dicts.keys())}")
     all_words = list(word_dicts[dict_name].items())
     if len(all_words) < num:
-        raise ValueError(
-            f"In '{dict_name}' dictionary only {len(all_words)} words available.")
-    selected_list = random.sample(all_words, num)
+        raise ValueError(f"In '{dict_name}' dictionary only {len(all_words)} words available.")
+    if is_random:
+        selected_list = random.sample(all_words, num)
+        available_words = [w for w in all_words if w not in selected_list]
+    else:
+        selected_list = all_words[:num]
+        available_words = all_words[num:]
     selected_words = deque(selected_list)
-    available_words = [w for w in all_words if w not in selected_list]
     print(f"--- Starting quiz using the '{dict_name}' dictionary ---")
     print("Type 'skip' instead of an answer to skip a word.")
     while selected_words:
@@ -24,10 +26,13 @@ def randomizer(word_dicts: dict[str, dict[str, list]], num: int, dict_name: str)
         if answer == "skip":
             print(f"Skipped word: {word}")
             if available_words:
-                new_item = random.choice(available_words)
-                available_words.remove(new_item)
+                if is_random:
+                    new_item = random.choice(available_words)
+                    available_words.remove(new_item)
+                else:
+                    new_item = available_words.pop(0)
                 selected_words.append(new_item)
-                print("Added a new random word to the queue!\n")
+                print("Added a new word to the queue!\n")
             else:
                 print("No more new words in dictionary to replace it.\n")
             continue
