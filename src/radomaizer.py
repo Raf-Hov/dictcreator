@@ -1,37 +1,30 @@
 import random
 from collections import deque
 
+
 def randomizer(word_dicts: dict, num: int, dict_name: str, is_random: bool = True) -> None:
     if dict_name not in word_dicts:
         raise KeyError(f"Dictionary '{dict_name}' not found. Available options: {list(word_dicts.keys())}")
-    
     all_words = list(word_dicts[dict_name].items())
-    
     if len(all_words) < num:
         raise ValueError(f"In '{dict_name}' dictionary only {len(all_words)} words available.")
-    
     if is_random:
         selected_list = random.sample(all_words, num)
         available_words = [w for w in all_words if w not in selected_list]
     else:
         selected_list = all_words[:num]
         available_words = all_words[num:]
-        
     selected_words = deque(selected_list)
     print(f"--- Starting using the '{dict_name}' dictionary ---")
-    
     while selected_words:
         current_item = selected_words.popleft()
         word, parts = current_item
-        
         is_json_format = False
         main_translation = ""
         examples = []
-        
         if isinstance(parts, list) and len(parts) > 0 and isinstance(parts[0], str):
             main_translation = parts[0]
             examples = parts[1:]
-            
         if isinstance(parts, dict):
             is_json_format = True
             main_translation = parts.get('translation', '')
@@ -39,15 +32,11 @@ def randomizer(word_dicts: dict, num: int, dict_name: str, is_random: bool = Tru
             for ex in examples_raw:
                 if isinstance(ex, dict) and 'sentence_en' in ex:
                     examples.append(ex)
-                    
         if not main_translation and isinstance(parts, list):
             main_translation = parts[0] if parts else ""
-        
-        # --- View mode ---
         if not is_random:
             print(f"\n[Queue: {len(selected_words) + 1} | Left in dict: {len(available_words)}] Word: \033[32m{word}\033[0m")
             ans = input("Enter - show translation | 'skip' - move to end | 'next' - replace with new: ").strip().lower()
-            
             if ans == "next":
                 print(f"Translation: \033[31m{main_translation}\033[0m")
                 if available_words:
@@ -55,13 +44,11 @@ def randomizer(word_dicts: dict, num: int, dict_name: str, is_random: bool = Tru
                     selected_words.append(new_item)
                     print("Added a new word as replacement!\n")
                 continue
-                
             if ans == "skip":
                 print(f"Translation: \033[31m{main_translation}\033[0m")
                 print("Word moved to the end of the queue without deletion.")
                 selected_words.append(current_item)
                 continue
-                
             print(f"Translation: \033[33m{main_translation}\033[0m")
             if examples:
                 print("\nExamples/Sentences:")
@@ -84,12 +71,8 @@ def randomizer(word_dicts: dict, num: int, dict_name: str, is_random: bool = Tru
                     idx = (idx + 1) % len(examples)
             
             continue
-
-        # --- Test mode ---
         print(f"\nWords in queue: {len(selected_words) + 1} | Left in dict: {len(available_words)}")
-        
         answer = input(f"Translate the word \033[31m'{word}'\033[0m: ").strip().lower()
-        
         if answer == "next":
             print(f"Translation: \033[31m{main_translation}\033[0m")
             print("Skipped word.")
@@ -104,13 +87,11 @@ def randomizer(word_dicts: dict, num: int, dict_name: str, is_random: bool = Tru
             else:
                 print("No more new words in the dictionary to replace it.\n")
             continue
-            
         elif answer == "skip":
             print(f"Translation: \033[31m{main_translation}\033[0m")
             print("Skipped without deletion (moved to the end).")
             selected_words.append(current_item)
             continue
-            
         correct = False
         if answer:
             valid_answers = [x.strip().lower() for x in main_translation.replace(";", ",").split(",")]
@@ -126,7 +107,6 @@ def randomizer(word_dicts: dict, num: int, dict_name: str, is_random: bool = Tru
                     if answer in words_in_valid:
                         correct = True
                         break
-                        
         if correct:
             print("\033[32mCorrect :)!\033[0m")
             print(f"Full translation: \033[33m{main_translation}\033[0m")
@@ -134,15 +114,11 @@ def randomizer(word_dicts: dict, num: int, dict_name: str, is_random: bool = Tru
             print(f"Translation: \033[31m{main_translation}\033[0m")
             print("Incorrect answer! Moved to the end of the queue.\n")
             selected_words.append(current_item)
-            
-        # Pokazivaem predlojeniya v lyubom sluchae (i pri correct, i pri incorrect)
         if examples:
             print("\nExamples/Sentences:")
             
-            # Esli rejim testirovaniya (random), peremeshivaem predlojeniya
             if is_random:
                 random.shuffle(examples)
-                
             idx = 0
             while True:
                 part = examples[idx]
